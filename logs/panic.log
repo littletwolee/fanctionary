@@ -1,5 +1,0 @@
-time="2018-02-06T16:48:45+08:00" level=panic msg="Error 1045: Access denied for user 'root'@'218.244.55.34' (using password: YES)" func="github.com/littletwolee/commons.(*mysqlHelper).MysqlIn" line=81
-time="2018-02-06T18:15:43+08:00" level=panic msg="Error 1045: Access denied for user 'root'@'218.244.55.34' (using password: YES)" func="github.com/littletwolee/commons.(*mysqlHelper).MysqlIn" line=81
-time="2018-02-06T18:16:24+08:00" level=panic msg="Error 1045: Access denied for user 'root'@'218.244.55.34' (using password: YES)" func="github.com/littletwolee/commons.(*mysqlHelper).MysqlIn" line=81
-time="2018-03-17T19:55:14+08:00" level=panic msg="Error 1045: Access denied for user 'root'@'localhost' (using password: YES)" func="github.com/littletwolee/commons.(*mysqlHelper).MysqlIn" line=81
-time="2018-03-17T19:55:58+08:00" level=panic msg="Error 1045: Access denied for user ''@'localhost' (using password: NO)" func="github.com/littletwolee/commons.(*mysqlHelper).MysqlIn" line=81

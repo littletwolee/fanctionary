@@ -13,7 +13,7 @@ import (
 	"github.com/littletwolee/commons"
 )
 
-var log = commons.GetLogger()
+//var log = commons.GetLogger()
 
 func main() {
 	router := &routers.Router{}
@@ -24,7 +24,7 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 	if err := gracefulRun(&srv); err != nil {
-		log.LogErr(err)
+		commons.Console().Error(err)
 	}
 }
 
@@ -35,8 +35,7 @@ func gracefulRun(srv *http.Server) error {
 		<-stopChan
 		srv.Shutdown(context.Background())
 	}()
-
-	log.OutMsg(fmt.Sprintf("listening to %s", srv.Addr))
+	commons.Console().InfoF("listening to %s", srv.Addr)
 	switch err := srv.ListenAndServe(); err {
 	case http.ErrServerClosed, nil:
 		return nil
