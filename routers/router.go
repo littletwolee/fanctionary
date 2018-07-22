@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"fan/controllers"
+	"fanctionary/controllers"
 	"fmt"
 	"net/http"
 

@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fan/routers"
+	"fanctionary/routers"
 	"fmt"
 	"net/http"
 	"os"

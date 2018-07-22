@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"fan/models"
-	"fan/utils"
+	"fanctionary/models"
+	"fanctionary/utils"
 
 	"github.com/gorilla/mux"
 	"github.com/littletwolee/commons"
