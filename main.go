@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fanctionary/routers"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,13 +12,10 @@ import (
 	"github.com/littletwolee/commons"
 )
 
-//var log = commons.GetLogger()
-
 func main() {
-	router := &routers.Router{}
 	srv := http.Server{
-		Addr:         fmt.Sprintf("%s:%d", commons.Config.GetString("server.host"), commons.Config.GetInt("server.port")),
-		Handler:      router.Handler(),
+		Addr:         commons.GetConfig().GetString("sys.host"),
+		Handler:      getRouter().Handler(),
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
@@ -28,6 +24,19 @@ func main() {
 	}
 }
 
+func getRouter() *routers.Router {
+	mongo := commons.NewMongo(
+		commons.GetConfig().GetString("mongo.host"),
+		commons.GetConfig().GetString("mongo.port"),
+		commons.GetConfig().GetString("mongo.database"),
+		commons.GetConfig().GetString("mongo.user"),
+		commons.GetConfig().GetString("mongo.pwd"),
+		commons.GetConfig().GetInt("mongo.pool_limit"),
+	)
+	return &routers.Router{
+		Mongo: mongo,
+	}
+}
 func gracefulRun(srv *http.Server) error {
 	stopChan := make(chan os.Signal)
 	signal.Notify(stopChan, syscall.SIGTERM, syscall.SIGINT)

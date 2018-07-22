@@ -1,0 +1,9 @@
+[sys]
+host=":9050"
+[mongo]
+host="fullday.fubaby.top"
+port="27017"
+user="fanctionary"
+pwd="VTajdtP1o?fanctionaryY[5QIF"
+database="fanctionary"
+pool_limit=4096

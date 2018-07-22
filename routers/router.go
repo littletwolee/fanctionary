@@ -6,9 +6,16 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/littletwolee/commons"
 )
 
-type Router struct{}
+const (
+	ID = "{id}"
+)
+
+type Router struct {
+	Mongo *commons.Mongo
+}
 
 func (r *Router) Handler() http.Handler {
 	router := mux.NewRouter()
@@ -16,9 +23,9 @@ func (r *Router) Handler() http.Handler {
 	return router
 }
 
-var advice = controllers.GetAdviceController()
-
 func (r *Router) handleAPI(router *mux.Router) {
-	routerAdvice := "/advice"
-	router.HandleFunc(fmt.Sprintf("%s/{open_id}/type/{type}", routerAdvice), advice.GetAdvice).Methods(http.MethodGet)
+	entry := controllers.GetEntriesController(r.Mongo)
+	routerEntries := "/entries"
+	router.HandleFunc(fmt.Sprintf("%s/%s", routerEntries, ID), entry.GetEntry).Methods(http.MethodGet)
+	router.HandleFunc(routerEntries, entry.PostEntry).Methods(http.MethodPost)
 }

@@ -10,11 +10,11 @@ const (
 	timeFormart = "2006-01-02 15:04"
 )
 
-type Advice struct {
-	ID       int    `json:"id"`
-	Title    string `json:"title"`
-	CopyAble bool   `json:"copy_able"`
-	NextAble bool   `json:"next_able"`
+type Entry struct {
+	ID    string    `json:"_id" bson:"_id"`
+	CTime time.Time `json:"ctime" bson:"ctime"`
+	Title string    `json:"title" bson:"title"`
+	Tags  []string  `json:"tag" bson:"tags"`
 }
 
 func (t *Time) UnmarshalJSON(data []byte) (err error) {
