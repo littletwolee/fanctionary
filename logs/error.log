@@ -1,0 +1,5 @@
+time="2018-02-07T13:40:18+08:00" level=error msg="unsupported destination, should be slice or struct"
+time="2018-02-07T13:40:29+08:00" level=error msg="unsupported destination, should be slice or struct"
+time="2018-02-07T13:42:28+08:00" level=error msg="unsupported destination, should be slice or struct"
+time="2018-02-07T13:42:35+08:00" level=error msg="unsupported destination, should be slice or struct"
+time="2018-02-07T13:43:03+08:00" level=error msg="unsupported destination, should be slice or struct"
