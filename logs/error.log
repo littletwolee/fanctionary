@@ -1,3 +1,0 @@
-time="2018-07-22T15:46:06+08:00" level=error msg="123:[111]" file=/Users/lee/code/go/src/github.com/littletwolee/commons/logger.go func="github.com/littletwolee/commons.(*log).Erro" line=182
-time="2018-07-22T15:47:15+08:00" level=error msg="123:[111]" file=/Users/lee/code/go/src/github.com/littletwolee/commons/logger.go func="github.com/littletwolee/commons.(*log).Erro" line=182
-time="2018-07-22T15:47:54+08:00" level=error msg="123:111" file=/Users/lee/code/go/src/github.com/littletwolee/commons/logger.go func="github.com/littletwolee/commons.(*log).Erro" line=182
