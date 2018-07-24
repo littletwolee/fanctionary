@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"time"
+	"sync"
 
 	"fanctionary/models"
 	"fanctionary/utils"
@@ -37,7 +37,7 @@ func (e *Entry) GetEntry(w http.ResponseWriter, r *http.Request) {
 	q := make(map[string]interface{})
 	q["_id"] = ID
 	var entry models.Entry
-	if err := e.Mongo.ViewOneC(entries, q, entry); err != nil {
+	if _, err := e.Mongo.ViewOneC(entries, q, entry); err != nil {
 		utils.ServerError(w, err)
 		return
 	}
@@ -53,14 +53,39 @@ func (e *Entry) PostEntry(w http.ResponseWriter, r *http.Request) {
 		utils.BadRequest(w, fmt.Errorf(utils.ERROR_HTTP_BAD_REQUEST))
 		return
 	}
-	// entry.ID = bson.NewObjectId().String()
-	entry.CTime = time.Now()
-	if err := e.Mongo.InsertC(entries, &entry); err != nil {
+	a := e.setTags(entry.Tags)
+	fmt.Println(a)
+	entry.Tags = a
+	id, err := e.Mongo.InsertC(entries, &entry)
+	if err != nil {
 		utils.ServerError(w, err)
 		return
 	}
-	if err := json.NewEncoder(w).Encode(models.NewResult(nil, nil)); err != nil {
+	if err := json.NewEncoder(w).Encode(models.NewResult(nil, id)); err != nil {
 		utils.ServerError(w, err)
 		return
 	}
+}
+
+func (e *Entry) setTags(entries []string) []string {
+	var ids []string
+	if len(entries) > 0 {
+		var wg sync.WaitGroup
+		for _, v := range entries {
+			if v != "" {
+				wg.Add(1)
+				m := make(map[string][]string)
+				m["tag"] = []string{v}
+				id, err := e.Mongo.UpsertC(tags, m, &models.Tag{Title: v})
+				if err != nil {
+					commons.Console().Error(err)
+					continue
+				}
+				ids = append(ids, id)
+				wg.Done()
+			}
+		}
+		wg.Wait()
+	}
+	return ids
 }

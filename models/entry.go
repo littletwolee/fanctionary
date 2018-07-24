@@ -4,33 +4,17 @@ import (
 	"time"
 )
 
-type Time time.Time
-
-const (
-	timeFormart = "2006-01-02 15:04"
-)
-
 type Entry struct {
-	ID    string    `json:"_id" bson:"_id"`
-	CTime time.Time `json:"ctime" bson:"ctime"`
-	Title string    `json:"title" bson:"title"`
-	Tags  []string  `json:"tag" bson:"tags"`
+	ID          string    `json:"_id" bson:"_id"`
+	CTime       time.Time `json:"ctime" bson:"ctime"`
+	Title       string    `json:"title" bson:"title"`
+	Explanation string    `json:"exp" bson:"exp"`
+	Tags        []string  `json:"tags" bson:"tags"`
 }
 
-func (t *Time) UnmarshalJSON(data []byte) (err error) {
-	now, err := time.ParseInLocation(`"`+timeFormart+`"`, string(data), time.Local)
-	*t = Time(now)
-	return
-}
-
-func (t Time) MarshalJSON() ([]byte, error) {
-	b := make([]byte, 0, len(timeFormart)+2)
-	b = append(b, '"')
-	b = time.Time(t).AppendFormat(b, timeFormart)
-	b = append(b, '"')
-	return b, nil
-}
-
-func (t Time) String() string {
-	return time.Time(t).Format(timeFormart)
+func (e *Entry) SetTags(f func(tags []string) []string) []string {
+	if len(e.Tags) > 0 {
+		return f(e.Tags)
+	}
+	return nil
 }
