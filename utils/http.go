@@ -2,7 +2,7 @@ package utils
 
 import (
 	"encoding/json"
-	"fullday/models"
+	"fanctionary/models"
 	"io"
 	"io/ioutil"
 	"net/http"
