@@ -29,15 +29,15 @@ const (
 )
 
 func (e *Entry) GetEntry(w http.ResponseWriter, r *http.Request) {
-	ID := mux.Vars(r)["id"]
-	if ID == "" {
+	id := mux.Vars(r)["id"]
+	if id == "" {
 		utils.BadRequest(w, fmt.Errorf(utils.ERROR_HTTP_BAD_REQUEST))
 		return
 	}
 	q := make(map[string]interface{})
-	q["_id"] = ID
+	q["_id"] = e.Mongo.ObjectIDHex(id)
 	var entry models.Entry
-	if _, err := e.Mongo.ViewOneC(entries, q, entry); err != nil {
+	if _, err := e.Mongo.ViewOneC(entries, q, &entry); err != nil {
 		utils.ServerError(w, err)
 		return
 	}
@@ -53,10 +53,10 @@ func (e *Entry) PostEntry(w http.ResponseWriter, r *http.Request) {
 		utils.BadRequest(w, fmt.Errorf(utils.ERROR_HTTP_BAD_REQUEST))
 		return
 	}
-	a := e.setTags(entry.Tags)
-	fmt.Println(a)
-	entry.Tags = a
-	id, err := e.Mongo.InsertC(entries, &entry)
+	entryPoint := &entry
+	entryPoint.ID = e.Mongo.NewObjectID()
+	entryPoint.Tags = e.setTags(entryPoint.ID.Hex(), entryPoint.Tags)
+	id, err := e.Mongo.InsertC(entries, entryPoint)
 	if err != nil {
 		utils.ServerError(w, err)
 		return
@@ -67,25 +67,54 @@ func (e *Entry) PostEntry(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (e *Entry) setTags(entries []string) []string {
+func (e *Entry) setTags(eID string, entries []string) []string {
 	var ids []string
 	if len(entries) > 0 {
-		var wg sync.WaitGroup
+		wg := &sync.WaitGroup{}
 		for _, v := range entries {
 			if v != "" {
 				wg.Add(1)
-				m := make(map[string][]string)
-				m["tag"] = []string{v}
-				id, err := e.Mongo.UpsertC(tags, m, &models.Tag{Title: v})
+				m := make(map[string]string)
+				m["title"] = v
+				var tag models.Tag
+				_, err := e.Mongo.ViewOneC(tags, m, &tag)
 				if err != nil {
-					commons.Console().Error(err)
-					continue
+					if err.Error() == utils.NOT_FOUND {
+						tag = models.Tag{
+							Title:   v,
+							Entries: []string{eID},
+						}
+						tagID, err := e.Mongo.InsertC(tags, &tag)
+						if err != nil {
+							catchErr(wg, err)
+							continue
+						}
+						ids = append(ids, tagID)
+					} else {
+						catchErr(wg, err)
+						continue
+					}
+				} else {
+					m := make(map[string]interface{})
+					m["entries"] = append(tag.Entries, eID)
+					q := make(map[string]interface{})
+					q["_id"] = tag.ID
+					_, err := e.Mongo.UpdateC(tags, q, m)
+					if err != nil {
+						catchErr(wg, err)
+						continue
+					}
+					ids = append(ids, tag.ID.Hex())
 				}
-				ids = append(ids, id)
 				wg.Done()
 			}
 		}
 		wg.Wait()
 	}
 	return ids
+}
+
+func catchErr(wg *sync.WaitGroup, err error) {
+	commons.Console().Error(err)
+	wg.Done()
 }

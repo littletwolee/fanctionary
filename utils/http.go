@@ -8,11 +8,6 @@ import (
 	"net/http"
 )
 
-const (
-	ERROR_HTTP_BAD_REQUEST = "bad request"
-	ERROR_SERVER_ERROR     = "server error"
-)
-
 func BadRequest(w http.ResponseWriter, err error) {
 	serveError(w, http.StatusBadRequest, err)
 }
