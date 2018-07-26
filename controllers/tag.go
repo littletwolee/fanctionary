@@ -1,6 +1,13 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fanctionary/models"
+	"fanctionary/utils"
+	"fmt"
+	"net/http"
+
+	"github.com/gorilla/mux"
 	"github.com/littletwolee/commons"
 )
 
@@ -18,24 +25,23 @@ const (
 	tags string = "tags"
 )
 
-// func (t *Tag) GetTag(w http.ResponseWriter, r *http.Request) {
-// 	ID := mux.Vars(r)["id"]
-// 	if ID == "" {
-// 		utils.BadRequest(w, fmt.Errorf(utils.ERROR_HTTP_BAD_REQUEST))
-// 		return
-// 	}
-// 	q := make(map[string]interface{})
-// 	q["_id"] = ID
-// 	var tag models.Tag
-// 	if err := t.Mongo.ViewOneC(tags, q, tag); err != nil {
-// 		utils.ServerError(w, err)
-// 		return
-// 	}
-// 	if err := json.NewEncoder(w).Encode(models.NewResult(nil, tag)); err != nil {
-// 		utils.ServerError(w, err)
-// 		return
-// 	}
-// }
+func (t *Tag) GetTag(w http.ResponseWriter, r *http.Request) {
+	ID := mux.Vars(r)["id"]
+	if ID == "" {
+		utils.BadRequest(w, fmt.Errorf(utils.ERROR_HTTP_BAD_REQUEST))
+		return
+	}
+	q := commons.Query.New("_id", t.Mongo.ObjectIDHex(ID))
+	var tag models.Tag
+	if err := t.Mongo.ViewOneC(tags, q, tag); err != nil {
+		utils.ServerError(w, err)
+		return
+	}
+	if err := json.NewEncoder(w).Encode(models.NewResult(nil, tag)); err != nil {
+		utils.ServerError(w, err)
+		return
+	}
+}
 
 // func (t *Tag) getTag(tagStr string) (*models.Tag, error) {
 // 	q := make(map[string]interface{})

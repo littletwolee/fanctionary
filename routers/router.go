@@ -28,4 +28,8 @@ func (r *Router) handleAPI(router *mux.Router) {
 	routerEntries := "/entries"
 	router.HandleFunc(fmt.Sprintf("%s/%s", routerEntries, ID), entry.GetEntry).Methods(http.MethodGet)
 	router.HandleFunc(routerEntries, entry.PostEntry).Methods(http.MethodPost)
+
+	tag := controllers.GetTagsController(r.Mongo)
+	routerTag := "/tag"
+	router.HandleFunc(fmt.Sprintf("%s/%s", routerTag, ID), entry.GetTag).Methods(http.MethodGet)
 }
