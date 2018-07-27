@@ -8,15 +8,22 @@ import (
 
 type Entry struct {
 	ID          commons.ObjectID `json:"_id" bson:"_id"`
-	CTime       time.Time        `json:"ctime" bson:"ctime"`
-	Title       string           `json:"title" bson:"title"`
-	Explanation string           `json:"exp" bson:"exp"`
-	Tags        []string         `json:"tags" bson:"tags"`
+	CTime       time.Time        `json:"-" bson:"ctime,omitempty"`
+	Title       string           `json:"title,omitempty" bson:"title,omitempty"`
+	Explanation string           `json:"exp,omitempty" bson:"exp,omitempty"`
+	Tags        []Tag            `json:"tags,omitempty" bson:"tags,omitempty"`
 }
 
-func (e *Entry) SetTags(f func(tags []string) []string) []string {
-	if len(e.Tags) > 0 {
-		return f(e.Tags)
+// func (e *Entry) SetTags(f func(tags []string) []string) []string {
+// 	if len(e.Tags) > 0 {
+// 		return f(e.Tags)
+// 	}
+// 	return nil
+// }
+
+func (e *Entry) IsNil() interface{} {
+	if e == nil || e.ID == nil {
+		return nil
 	}
-	return nil
+	return e
 }

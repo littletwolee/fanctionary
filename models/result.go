@@ -12,7 +12,7 @@ func NewResult(err error, data interface{}) Result {
 		msg  string
 	)
 	if err != nil {
-		code = 1
+		code = 0
 		msg = err.Error()
 	}
 	return Result{
