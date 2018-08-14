@@ -3,15 +3,15 @@ package models
 import (
 	"time"
 
-	"github.com/littletwolee/commons"
+	"github.com/littletwolee/commons/mongo"
 )
 
 type Entry struct {
-	ID          commons.ObjectID `json:"_id" bson:"_id"`
-	CTime       time.Time        `json:"-" bson:"ctime,omitempty"`
-	Title       string           `json:"title,omitempty" bson:"title,omitempty"`
-	Explanation string           `json:"exp,omitempty" bson:"exp,omitempty"`
-	Tags        []Tag            `json:"tags,omitempty" bson:"tags,omitempty"`
+	ID          mongo.ObjectID `json:"_id" bson:"_id"`
+	CTime       time.Time      `json:"-" bson:"ctime,omitempty"`
+	Title       string         `json:"title,omitempty" bson:"title,omitempty"`
+	Explanation string         `json:"exp,omitempty" bson:"exp,omitempty"`
+	Tags        []Tag          `json:"tags,omitempty" bson:"tags,omitempty"`
 }
 
 // func (e *Entry) SetTags(f func(tags []string) []string) []string {

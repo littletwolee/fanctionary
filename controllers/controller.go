@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"github.com/littletwolee/commons"
+	"github.com/littletwolee/commons/mongo"
 )
 
 type Server struct {
-	Mongo *commons.Mongo
+	Mongo *mongo.Mongo
 }

@@ -3,14 +3,14 @@ package models
 import (
 	"time"
 
-	"github.com/littletwolee/commons"
+	"github.com/littletwolee/commons/mongo"
 )
 
 type Tag struct {
-	ID      commons.ObjectID `json:"_id" bson:"_id"`
-	CTime   time.Time        `json:"-" bson:"ctime,omitempty"`
-	Title   string           `json:"title,omitempty" bson:"title,omitempty"`
-	Entries []Entry          `json:"entries,omitempty" bson:"entries,omitempty"`
+	ID      mongo.ObjectID `json:"_id" bson:"_id"`
+	CTime   time.Time      `json:"-" bson:"ctime,omitempty"`
+	Title   string         `json:"title,omitempty" bson:"title,omitempty"`
+	Entries []Entry        `json:"entries,omitempty" bson:"entries,omitempty"`
 }
 
 func (t *Tag) IsNil() interface{} {

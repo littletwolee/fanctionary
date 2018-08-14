@@ -7,9 +7,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/littletwolee/commons"
-
 	"github.com/gorilla/mux"
+	"github.com/littletwolee/commons/mongo"
 )
 
 const (
@@ -58,7 +57,7 @@ func (s *Server) PostTag(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) getTagsByIds(tagIds []models.Tag) ([]models.Tag, error) {
-	var ids commons.ObjectIDs
+	var ids mongo.ObjectIDs
 	for _, tag := range tagIds {
 		ids = append(ids, tag.ID)
 	}

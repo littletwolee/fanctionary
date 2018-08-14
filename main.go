@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/littletwolee/commons"
+	"github.com/littletwolee/commons/logger"
+	"github.com/littletwolee/commons/mongo"
 )
 
 func main() {
@@ -20,12 +22,12 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 	if err := gracefulRun(&srv); err != nil {
-		commons.Console().Error(err)
+		logger.Console().Error(err)
 	}
 }
 
 func getRouter() *routers.Router {
-	mongo := commons.NewMongo(
+	mongo := mongo.NewMongo(
 		commons.GetConfig().GetString("mongo.host"),
 		commons.GetConfig().GetString("mongo.port"),
 		commons.GetConfig().GetString("mongo.database"),
@@ -44,7 +46,7 @@ func gracefulRun(srv *http.Server) error {
 		<-stopChan
 		srv.Shutdown(context.Background())
 	}()
-	commons.Console().InfoF("listening to %s", srv.Addr)
+	logger.Console().InfoF("listening to %s", srv.Addr)
 	switch err := srv.ListenAndServe(); err {
 	case http.ErrServerClosed, nil:
 		return nil

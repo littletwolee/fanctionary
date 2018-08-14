@@ -11,7 +11,8 @@ import (
 	"encoding/json"
 
 	"github.com/gorilla/mux"
-	"github.com/littletwolee/commons"
+	"github.com/littletwolee/commons/logger"
+	"github.com/littletwolee/commons/mongo"
 )
 
 const (
@@ -64,7 +65,7 @@ func (s *Server) PostEntry(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func (s *Server) getEntriesByIds(entryIds []models.Entry) ([]models.Entry, error) {
-	var ids commons.ObjectIDs
+	var ids mongo.ObjectIDs
 	for _, entry := range entryIds {
 		ids = append(ids, entry.ID)
 	}
@@ -90,7 +91,7 @@ func (s *Server) setTags(eID string, tags []models.Tag) []models.Tag {
 					var tag models.Tag
 					_, err := s.Mongo.ViewOneC(tagsTable, m, &tag)
 					if err != nil {
-						if err == commons.ErrNotFound {
+						if err == mongo.ErrNotFound {
 							tag = models.Tag{
 								Title: v.Title,
 								Entries: []models.Entry{
@@ -129,6 +130,6 @@ func (s *Server) setTags(eID string, tags []models.Tag) []models.Tag {
 }
 
 func catchErr(wg *sync.WaitGroup, err error) {
-	commons.Console().Error(err)
+	logger.Console().Error(err)
 	wg.Done()
 }

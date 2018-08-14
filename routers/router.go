@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/littletwolee/commons"
+	"github.com/littletwolee/commons/mongo"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 )
 
 type Router struct {
-	Mongo *commons.Mongo
+	Mongo *mongo.Mongo
 }
 
 func (r *Router) Handler() http.Handler {
